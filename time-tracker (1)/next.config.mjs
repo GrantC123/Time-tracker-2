@@ -16,6 +16,10 @@ const nextConfig = {
   },
   output: 'standalone',
   distDir: '.next',
+  generateEtags: true,
+  pageExtensions: ['tsx', 'ts', 'jsx', 'js'],
+  reactStrictMode: true,
+  swcMinify: true,
   generateBuildId: async () => 'build',
   poweredByHeader: false,
   compress: true
