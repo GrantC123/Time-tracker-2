@@ -97,8 +97,8 @@ export async function POST(request: NextRequest) {
     // Prepare the data to append
     const values = [
       [
-        entry.startTime,
-        entry.endTime,
+        new Date(entry.startTime).toLocaleString(),
+        new Date(entry.endTime).toLocaleString(),
         entry.duration,
         entry.description,
         entry.project || "",
