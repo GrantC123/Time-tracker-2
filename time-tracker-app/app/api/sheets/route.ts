@@ -95,54 +95,21 @@ export async function POST(request: NextRequest) {
     }
 
     // Prepare the data to append
-    const formatDateForSheets = (dateString: string) => {
-      // Parse the ISO string to UTC
-      const date = new Date(dateString);
-      
-      // Add 4 hours to compensate for the offset
-      const adjustedDate = new Date(date.getTime() + (4 * 60 * 60 * 1000));
-      
-      // Format the date
-      const options: Intl.DateTimeFormatOptions = {
-        timeZone: 'America/New_York',
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: true
-      };
-      
-      return adjustedDate.toLocaleString('en-US', options);
-    };
-
-    const getCurrentTimeInET = () => {
-      const now = new Date();
-      const adjustedDate = new Date(now.getTime() + (4 * 60 * 60 * 1000));
-      
-      const options: Intl.DateTimeFormatOptions = {
-        timeZone: 'America/New_York',
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: true
-      };
-      return adjustedDate.toLocaleString('en-US', options);
-    };
-
     const values = [
       [
-        formatDateForSheets(entry.startTime),
-        formatDateForSheets(entry.endTime),
+        entry.startTime,
+        entry.endTime,
         entry.duration,
         entry.description,
         entry.project || "",
-        getCurrentTimeInET().split(',')[0], // Date part
-        getCurrentTimeInET().split(',')[1].trim(), // Time part
+        new Date().toLocaleString('en-US', {
+          timeZone: 'America/New_York',
+          dateStyle: 'short'
+        }),
+        new Date().toLocaleString('en-US', {
+          timeZone: 'America/New_York',
+          timeStyle: 'short'
+        }),
       ],
     ]
 

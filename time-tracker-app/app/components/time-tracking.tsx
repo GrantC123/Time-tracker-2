@@ -128,6 +128,13 @@ export default function TimeTracking({ isConfigured, spreadsheetId, sheetName }:
 
   const logToGoogleSheets = async (entry: TimeEntry) => {
     try {
+      const formatDateForSheets = (date: Date) => {
+        return date.toLocaleString('en-US', {
+          timeZone: 'America/New_York',
+          hour12: true
+        });
+      };
+
       const response = await fetch("/api/sheets", {
         method: "POST",
         headers: {
@@ -137,8 +144,8 @@ export default function TimeTracking({ isConfigured, spreadsheetId, sheetName }:
           spreadsheetId,
           sheetName,
           entry: {
-            startTime: entry.startTime.toISOString(),
-            endTime: entry.endTime.toISOString(),
+            startTime: formatDateForSheets(entry.startTime),
+            endTime: formatDateForSheets(entry.endTime),
             duration: formatDuration(entry.duration),
             description: entry.description,
             project: entry.project || "",
