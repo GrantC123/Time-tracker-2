@@ -95,10 +95,17 @@ export async function POST(request: NextRequest) {
     }
 
     // Prepare the data to append
+    const formatDateForSheets = (dateString: string) => {
+      const date = new Date(dateString);
+      const offset = date.getTimezoneOffset();
+      const adjustedDate = new Date(date.getTime() - (offset * 60 * 1000));
+      return adjustedDate.toLocaleString();
+    };
+
     const values = [
       [
-        new Date(entry.startTime).toLocaleString(),
-        new Date(entry.endTime).toLocaleString(),
+        formatDateForSheets(entry.startTime),
+        formatDateForSheets(entry.endTime),
         entry.duration,
         entry.description,
         entry.project || "",
