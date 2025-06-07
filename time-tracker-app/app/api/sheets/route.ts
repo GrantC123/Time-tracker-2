@@ -95,30 +95,18 @@ export async function POST(request: NextRequest) {
     }
 
     // Prepare the data to append
-    const formatCurrentTime = () => {
-      const now = new Date();
-      const month = (now.getMonth() + 1).toString().padStart(2, '0');
-      const day = now.getDate().toString().padStart(2, '0');
-      const year = now.getFullYear();
-      const hours = now.getHours().toString().padStart(2, '0');
-      const minutes = now.getMinutes().toString().padStart(2, '0');
-      return {
-        date: `${month}/${day}/${year}`,
-        time: `${hours}:${minutes}`
-      };
-    };
-
-    const currentTime = formatCurrentTime();
-
+    // Note: These timestamps will be in UTC. In Google Sheets, use the formula:
+    // =A2 - TIME(4,0,0) to convert to Eastern Time (EDT)
+    // =A2 - TIME(5,0,0) for EST (during standard time)
     const values = [
       [
-        entry.startTime,
-        entry.endTime,
+        entry.startTime,  // UTC timestamp
+        entry.endTime,    // UTC timestamp
         entry.duration,
         entry.description,
         entry.project || "",
-        currentTime.date,
-        currentTime.time,
+        new Date().toISOString(), // Current time in UTC
+        "", // Leave time column empty as we're using full timestamps
       ],
     ]
 

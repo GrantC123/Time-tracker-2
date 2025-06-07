@@ -128,15 +128,6 @@ export default function TimeTracking({ isConfigured, spreadsheetId, sheetName }:
 
   const logToGoogleSheets = async (entry: TimeEntry) => {
     try {
-      const formatDateForSheets = (date: Date) => {
-        const month = (date.getMonth() + 1).toString().padStart(2, '0');
-        const day = date.getDate().toString().padStart(2, '0');
-        const year = date.getFullYear();
-        const hours = date.getHours().toString().padStart(2, '0');
-        const minutes = date.getMinutes().toString().padStart(2, '0');
-        return `${month}/${day}/${year} ${hours}:${minutes}`;
-      };
-
       const response = await fetch("/api/sheets", {
         method: "POST",
         headers: {
@@ -146,8 +137,8 @@ export default function TimeTracking({ isConfigured, spreadsheetId, sheetName }:
           spreadsheetId,
           sheetName,
           entry: {
-            startTime: formatDateForSheets(entry.startTime),
-            endTime: formatDateForSheets(entry.endTime),
+            startTime: entry.startTime.toISOString(),
+            endTime: entry.endTime.toISOString(),
             duration: formatDuration(entry.duration),
             description: entry.description,
             project: entry.project || "",
