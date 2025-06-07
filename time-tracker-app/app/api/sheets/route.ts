@@ -95,6 +95,21 @@ export async function POST(request: NextRequest) {
     }
 
     // Prepare the data to append
+    const formatCurrentTime = () => {
+      const now = new Date();
+      const month = (now.getMonth() + 1).toString().padStart(2, '0');
+      const day = now.getDate().toString().padStart(2, '0');
+      const year = now.getFullYear();
+      const hours = now.getHours().toString().padStart(2, '0');
+      const minutes = now.getMinutes().toString().padStart(2, '0');
+      return {
+        date: `${month}/${day}/${year}`,
+        time: `${hours}:${minutes}`
+      };
+    };
+
+    const currentTime = formatCurrentTime();
+
     const values = [
       [
         entry.startTime,
@@ -102,14 +117,8 @@ export async function POST(request: NextRequest) {
         entry.duration,
         entry.description,
         entry.project || "",
-        new Date().toLocaleString('en-US', {
-          timeZone: 'America/New_York',
-          dateStyle: 'short'
-        }),
-        new Date().toLocaleString('en-US', {
-          timeZone: 'America/New_York',
-          timeStyle: 'short'
-        }),
+        currentTime.date,
+        currentTime.time,
       ],
     ]
 

@@ -129,10 +129,12 @@ export default function TimeTracking({ isConfigured, spreadsheetId, sheetName }:
   const logToGoogleSheets = async (entry: TimeEntry) => {
     try {
       const formatDateForSheets = (date: Date) => {
-        return date.toLocaleString('en-US', {
-          timeZone: 'America/New_York',
-          hour12: true
-        });
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const day = date.getDate().toString().padStart(2, '0');
+        const year = date.getFullYear();
+        const hours = date.getHours().toString().padStart(2, '0');
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+        return `${month}/${day}/${year} ${hours}:${minutes}`;
       };
 
       const response = await fetch("/api/sheets", {
