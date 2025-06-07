@@ -9,6 +9,12 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  experimental: {
+    serverActions: {
+      allowedOrigins: ["localhost:3000", "localhost:3001"]
+    }
+  },
+  output: 'standalone'
 }
 
 export default nextConfig
