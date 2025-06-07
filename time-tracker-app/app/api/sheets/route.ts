@@ -99,7 +99,10 @@ export async function POST(request: NextRequest) {
       // Parse the ISO string to UTC
       const date = new Date(dateString);
       
-      // Format the date to Eastern Time
+      // Add 4 hours to compensate for the offset
+      const adjustedDate = new Date(date.getTime() + (4 * 60 * 60 * 1000));
+      
+      // Format the date
       const options: Intl.DateTimeFormatOptions = {
         timeZone: 'America/New_York',
         year: 'numeric',
@@ -111,10 +114,13 @@ export async function POST(request: NextRequest) {
         hour12: true
       };
       
-      return date.toLocaleString('en-US', options);
+      return adjustedDate.toLocaleString('en-US', options);
     };
 
     const getCurrentTimeInET = () => {
+      const now = new Date();
+      const adjustedDate = new Date(now.getTime() + (4 * 60 * 60 * 1000));
+      
       const options: Intl.DateTimeFormatOptions = {
         timeZone: 'America/New_York',
         year: 'numeric',
@@ -125,7 +131,7 @@ export async function POST(request: NextRequest) {
         second: '2-digit',
         hour12: true
       };
-      return new Date().toLocaleString('en-US', options);
+      return adjustedDate.toLocaleString('en-US', options);
     };
 
     const values = [
