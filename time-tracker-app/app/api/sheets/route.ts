@@ -96,10 +96,36 @@ export async function POST(request: NextRequest) {
 
     // Prepare the data to append
     const formatDateForSheets = (dateString: string) => {
+      // Parse the ISO string to UTC
       const date = new Date(dateString);
-      const offset = date.getTimezoneOffset();
-      const adjustedDate = new Date(date.getTime() - (offset * 60 * 1000));
-      return adjustedDate.toLocaleString();
+      
+      // Format the date to Eastern Time
+      const options: Intl.DateTimeFormatOptions = {
+        timeZone: 'America/New_York',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true
+      };
+      
+      return date.toLocaleString('en-US', options);
+    };
+
+    const getCurrentTimeInET = () => {
+      const options: Intl.DateTimeFormatOptions = {
+        timeZone: 'America/New_York',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true
+      };
+      return new Date().toLocaleString('en-US', options);
     };
 
     const values = [
@@ -109,8 +135,8 @@ export async function POST(request: NextRequest) {
         entry.duration,
         entry.description,
         entry.project || "",
-        new Date().toLocaleDateString(),
-        new Date().toLocaleTimeString(),
+        getCurrentTimeInET().split(',')[0], // Date part
+        getCurrentTimeInET().split(',')[1].trim(), // Time part
       ],
     ]
 
