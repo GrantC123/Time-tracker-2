@@ -11,10 +11,14 @@ const nextConfig = {
   },
   experimental: {
     serverActions: {
-      allowedOrigins: ["localhost:3000", "localhost:3001"]
+      bodySizeLimit: '2mb'
     }
   },
-  output: 'standalone'
+  output: 'standalone',
+  distDir: '.next',
+  generateBuildId: async () => 'build',
+  poweredByHeader: false,
+  compress: true
 }
 
 export default nextConfig
