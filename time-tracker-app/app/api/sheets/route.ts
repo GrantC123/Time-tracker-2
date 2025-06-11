@@ -100,20 +100,21 @@ export async function POST(request: NextRequest) {
     // =A2 - TIME(5,0,0) for EST (during standard time)
     const values = [
       [
-        entry.startTime,  // UTC timestamp
-        entry.endTime,    // UTC timestamp
+        entry.startTime,
+        entry.endTime,
         entry.duration,
         entry.description,
         entry.project || "",
-        new Date().toISOString(), // Current time in UTC
-        "", // Leave time column empty as we're using full timestamps
+        new Date().toLocaleDateString(),
+        new Date().toLocaleTimeString(),
+        entry.link || "",  // Add the link field
       ],
     ]
 
     // Append data to the sheet
     const appendResponse = await sheets.spreadsheets.values.append({
       spreadsheetId,
-      range: `${sheetName}!A:G`,
+      range: `${sheetName}!A:H`,  // Updated range to include the link column
       valueInputOption: "RAW",
       requestBody: {
         values,

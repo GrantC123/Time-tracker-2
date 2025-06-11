@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
-import { Play, Pause, Square, Clock, Trash2 } from "lucide-react"
+import { Play, Pause, Square, Clock, Trash2, LinkIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -18,6 +18,7 @@ interface TimeEntry {
   endTime: Date
   duration: number
   project?: string
+  link?: string
 }
 
 interface TimeTrackingProps {
@@ -32,6 +33,7 @@ export default function TimeTracking({ isConfigured, spreadsheetId, sheetName }:
   const [currentTime, setCurrentTime] = useState(0)
   const [description, setDescription] = useState("")
   const [project, setProject] = useState("")
+  const [link, setLink] = useState("")
   const [entries, setEntries] = useState<TimeEntry[]>([])
   const intervalRef = useRef<NodeJS.Timeout | null>(null)
   const { toast } = useToast()
@@ -105,6 +107,7 @@ export default function TimeTracking({ isConfigured, spreadsheetId, sheetName }:
       endTime,
       duration,
       project: project || undefined,
+      link: link || undefined,
     }
 
     setEntries((prev) => [entry, ...prev])
@@ -119,6 +122,8 @@ export default function TimeTracking({ isConfigured, spreadsheetId, sheetName }:
     setStartTime(null)
     setCurrentTime(0)
     setDescription("")
+    setProject("")
+    setLink("")
 
     toast({
       title: "Time logged",
@@ -137,11 +142,12 @@ export default function TimeTracking({ isConfigured, spreadsheetId, sheetName }:
           spreadsheetId,
           sheetName,
           entry: {
-            startTime: entry.startTime.toISOString(),
-            endTime: entry.endTime.toISOString(),
+            startTime: entry.startTime.toLocaleString(),
+            endTime: entry.endTime.toLocaleString(),
             duration: formatDuration(entry.duration),
             description: entry.description,
             project: entry.project || "",
+            link: entry.link || "",
           },
         }),
       })
@@ -216,6 +222,17 @@ export default function TimeTracking({ isConfigured, spreadsheetId, sheetName }:
                 disabled={isRunning}
               />
             </div>
+            <div>
+              <Label htmlFor="link">Link (Optional)</Label>
+              <Input
+                id="link"
+                type="url"
+                placeholder="Add a relevant link"
+                value={link}
+                onChange={(e) => setLink(e.target.value)}
+                disabled={isRunning}
+              />
+            </div>
           </div>
 
           {/* Timer Controls */}
@@ -266,6 +283,19 @@ export default function TimeTracking({ isConfigured, spreadsheetId, sheetName }:
                       <div className="text-sm text-muted-foreground">
                         {entry.startTime.toLocaleString()} - {entry.endTime.toLocaleString()}
                       </div>
+                      {entry.link && (
+                        <div className="mt-1">
+                          <a 
+                            href={entry.link} 
+                            target="_blank" 
+                            rel="noopener noreferrer" 
+                            className="text-sm text-blue-500 hover:text-blue-700 flex items-center gap-1"
+                          >
+                            <LinkIcon className="w-4 h-4" />
+                            Link
+                          </a>
+                        </div>
+                      )}
                     </div>
                     <div className="flex items-center gap-2">
                       <Badge variant="secondary">{formatDuration(entry.duration)}</Badge>
